@@ -1,0 +1,106 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  age           Int?
+  sex           String?
+
+  // Medical Profile
+  conditions    String?   // JSON string array
+  allergies     String?   // JSON string array
+  healthGoals   String?   // JSON string array
+
+  // Relationships
+  conversations Conversation[]
+  symptoms      Symptom[]
+  appointments  Appointment[]
+  medications   Medication[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Conversation {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String    @default("New Conversation")
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String       // "user" | "assistant" | "system"
+  content        String
+  emergency      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+model HealthTip {
+  id          String   @id @default(cuid())
+  category    String   // nutrition, exercise, mental-health, sleep, preventive
+  title       String
+  content     String
+  evidence    String?  // citation
+  targetGroup String?  // JSON string array - conditions/demographics
+  icon        String?  // emoji or icon name
+  createdAt   DateTime @default(now())
+}
+
+model Symptom {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location    String    // body part
+  description String
+  severity    Int       // 1-10
+  startDate   DateTime
+  endDate     DateTime?
+  resolved    Boolean   @default(false)
+  notes       String?
+  createdAt   DateTime  @default(now())
+}
+
+model Medication {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  dosage      String
+  frequency   String
+  startDate   DateTime
+  endDate     DateTime?
+  active      Boolean   @default(true)
+  notes       String?
+  createdAt   DateTime  @default(now())
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctorName  String   @default("Dr. Internist")
+  date        DateTime
+  time        String
+  reason      String
+  status      String   @default("scheduled") // scheduled, completed, cancelled
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
