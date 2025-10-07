@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,7 +23,7 @@ export async function DELETE(
     }
 
     const medication = await prisma.medication.findUnique({
-      where: { id: params.id },
+      where: { id: await params.then(p => p.id) },
     })
 
     if (!medication || medication.userId !== user.id) {
@@ -31,7 +31,7 @@ export async function DELETE(
     }
 
     await prisma.medication.delete({
-      where: { id: params.id },
+      where: { id: await params.then(p => p.id) },
     })
 
     return NextResponse.json({ message: 'Medication deleted successfully' })
@@ -46,7 +46,7 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -64,7 +64,7 @@ export async function PATCH(
     }
 
     const medication = await prisma.medication.findUnique({
-      where: { id: params.id },
+      where: { id: await params.then(p => p.id) },
     })
 
     if (!medication || medication.userId !== user.id) {
@@ -74,7 +74,7 @@ export async function PATCH(
     const body = await req.json()
 
     const updated = await prisma.medication.update({
-      where: { id: params.id },
+      where: { id: await params.then(p => p.id) },
       data: {
         active: body.active ?? medication.active,
         endDate: body.active === false ? new Date() : null,

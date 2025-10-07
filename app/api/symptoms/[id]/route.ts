@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -22,9 +22,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
+
     // Verify ownership before deleting
     const symptom = await prisma.symptom.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!symptom || symptom.userId !== user.id) {
@@ -32,7 +34,7 @@ export async function DELETE(
     }
 
     await prisma.symptom.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'Symptom deleted successfully' })
@@ -47,7 +49,7 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -64,8 +66,10 @@ export async function PATCH(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
+
     const symptom = await prisma.symptom.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!symptom || symptom.userId !== user.id) {
@@ -75,7 +79,7 @@ export async function PATCH(
     const body = await req.json()
 
     const updated = await prisma.symptom.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         resolved: body.resolved ?? symptom.resolved,
         endDate: body.resolved ? new Date() : null,

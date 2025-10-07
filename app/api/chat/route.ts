@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { detectEmergency, streamChatCompletion } from '@/lib/openai'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 export async function POST(req: Request) {
   try {

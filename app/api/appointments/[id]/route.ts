@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -22,8 +22,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
+
     const appointment = await prisma.appointment.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!appointment || appointment.userId !== user.id) {
@@ -31,7 +33,7 @@ export async function DELETE(
     }
 
     await prisma.appointment.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'Appointment deleted successfully' })
@@ -46,7 +48,7 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -63,8 +65,10 @@ export async function PATCH(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
+
     const appointment = await prisma.appointment.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!appointment || appointment.userId !== user.id) {
@@ -74,7 +78,7 @@ export async function PATCH(
     const body = await req.json()
 
     const updated = await prisma.appointment.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: body.status ?? appointment.status,
         notes: body.notes ?? appointment.notes,
