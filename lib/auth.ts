@@ -34,28 +34,39 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Please enter your email and password')
-        }
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.log('Auth failed: Missing credentials')
+            return null
+          }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        })
+          console.log('Attempting login for:', credentials.email)
 
-        if (!user || !user.password) {
-          throw new Error('No user found with this email')
-        }
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          })
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+          if (!user || !user.password) {
+            console.log('Auth failed: User not found')
+            return null
+          }
 
-        if (!isPasswordValid) {
-          throw new Error('Invalid password')
-        }
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
+          if (!isPasswordValid) {
+            console.log('Auth failed: Invalid password')
+            return null
+          }
+
+          console.log('Auth successful for:', user.email)
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          }
+        } catch (error) {
+          console.error('Auth error:', error)
+          return null
         }
       },
     }),
@@ -70,15 +81,18 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
+        console.log('JWT callback - Added user ID to token:', user.id)
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
+        console.log('Session callback - User:', session.user.email)
       }
       return session
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
 }
