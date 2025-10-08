@@ -36,29 +36,39 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            console.log('Auth failed: Missing credentials')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Auth failed: Missing credentials')
+            }
             return null
           }
 
-          console.log('Attempting login for:', credentials.email)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Attempting login for:', credentials.email)
+          }
 
           const user = await prisma.user.findUnique({
             where: { email: credentials.email },
           })
 
           if (!user || !user.password) {
-            console.log('Auth failed: User not found')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Auth failed: User not found')
+            }
             return null
           }
 
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
           if (!isPasswordValid) {
-            console.log('Auth failed: Invalid password')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Auth failed: Invalid password')
+            }
             return null
           }
 
-          console.log('Auth successful for:', user.email)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Auth successful for:', user.email)
+          }
           return {
             id: user.id,
             email: user.email,
@@ -81,18 +91,22 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        console.log('JWT callback - Added user ID to token:', user.id)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('JWT callback - Added user ID to token:', user.id)
+        }
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        console.log('Session callback - User:', session.user.email)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Session callback - User:', session.user.email)
+        }
       }
       return session
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
 }
