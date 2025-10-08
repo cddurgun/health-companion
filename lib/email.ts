@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend with API key, fallback to empty string for build time
+const resend = new Resend(process.env.RESEND_API_KEY || '')
 
 interface ZoomMeeting {
   meetingId: string
@@ -169,6 +170,12 @@ Please join the meeting 5 minutes early to test your audio and video.
 Best regards,
 Health Companion Team
   `
+
+  // Check if API key is configured
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not configured - email not sent')
+    return { success: false, error: 'Email service not configured' }
+  }
 
   try {
     const data = await resend.emails.send({
