@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY || '',
 })
 
 export interface UserProfile {
@@ -89,6 +89,10 @@ export async function getChatCompletion(
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
   userProfile: UserProfile = {}
 ) {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured')
+  }
+
   const systemPrompt = buildSystemPrompt(userProfile)
 
   const completion = await openai.chat.completions.create({
@@ -108,6 +112,10 @@ export async function streamChatCompletion(
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
   userProfile: UserProfile = {}
 ) {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured')
+  }
+
   const systemPrompt = buildSystemPrompt(userProfile)
 
   const stream = await openai.chat.completions.create({

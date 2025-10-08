@@ -4,10 +4,13 @@ import { Resend } from 'resend'
 let resendClient: Resend | null = null
 
 function getResendClient(): Resend {
-  if (!resendClient && process.env.RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is not configured')
+  }
+  if (!resendClient) {
     resendClient = new Resend(process.env.RESEND_API_KEY)
   }
-  return resendClient!
+  return resendClient
 }
 
 interface ZoomMeeting {
@@ -177,12 +180,6 @@ Please join the meeting 5 minutes early to test your audio and video.
 Best regards,
 Health Companion Team
   `
-
-  // Check if API key is configured
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY not configured - email not sent')
-    return { success: false, error: 'Email service not configured' }
-  }
 
   try {
     const resend = getResendClient()
