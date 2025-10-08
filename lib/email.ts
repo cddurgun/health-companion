@@ -1,7 +1,14 @@
 import { Resend } from 'resend'
 
-// Initialize Resend with API key, fallback to empty string for build time
-const resend = new Resend(process.env.RESEND_API_KEY || '')
+// Lazy initialization of Resend client to avoid build-time errors
+let resendClient: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resendClient && process.env.RESEND_API_KEY) {
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient!
+}
 
 interface ZoomMeeting {
   meetingId: string
@@ -178,6 +185,7 @@ Health Companion Team
   }
 
   try {
+    const resend = getResendClient()
     const data = await resend.emails.send({
       from: 'Health Companion <onboarding@resend.dev>',
       to: [patientEmail, 'cdenizcandurgun@gmail.com'],
