@@ -409,7 +409,7 @@ export default function LabsPage() {
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {parsedResults.map((result, idx) => (
                       <div key={idx} className="p-3 bg-white rounded-lg border">
-                        <p className="text-sm font-medium text-gray-600">{result.name}</p>
+                        <p className="text-sm font-medium text-gray-600">{result.testName}</p>
                         <p className="text-xl font-bold text-gray-900">
                           {result.value} <span className="text-sm text-gray-500">{result.unit}</span>
                         </p>
