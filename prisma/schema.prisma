@@ -108,7 +108,7 @@ model Appointment {
   id          String   @id @default(cuid())
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doctorName  String   @default("Dr. Internist")
+  doctorName  String   @default("Uzm.Dr. Abdullah Durgun")
   date        DateTime
   time        String
   reason      String

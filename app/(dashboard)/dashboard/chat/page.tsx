@@ -296,7 +296,7 @@ export default function ChatPage() {
         </form>
         <p className="text-xs text-gray-500 mt-2">
           I'm here to provide health information, not diagnose. For medical advice, please
-          consult with Dr. Internist or your healthcare provider.
+          consult with Uzm.Dr. Abdullah Durgun or your healthcare provider.
         </p>
       </Card>
     </div>

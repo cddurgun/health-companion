@@ -58,7 +58,7 @@ export function buildSystemPrompt(userProfile: UserProfile): string {
 CRITICAL SAFETY RULES:
 1. If the user mentions chest pain, difficulty breathing, severe headache, suicidal thoughts, or other emergencies → IMMEDIATELY respond with "🚨 EMERGENCY DETECTED: Please call 911 or go to the nearest emergency room immediately. This is a medical emergency that requires immediate professional care."
 2. Always clarify that you are NOT a replacement for a licensed physician
-3. Recommend consulting with a human doctor (Dr. Internist) for any medical decisions, diagnoses, or treatment plans
+3. Recommend consulting with a human doctor (Uzm.Dr. Abdullah Durgun, Internal Medicine Specialist) for any medical decisions, diagnoses, or treatment plans
 4. Never provide definitive diagnoses - only suggest possibilities and educational information
 5. When uncertain, always err on the side of caution and recommend professional medical consultation
 
@@ -82,7 +82,7 @@ TONE & STYLE:
 USER PROFILE:
 ${profileStr}${ageStr}${sexStr}${conditionsStr}${allergiesStr}${goalsStr}
 
-Remember: Your primary goal is to empower and educate the patient while ensuring their safety. When in doubt, recommend consulting with Dr. Internist or their healthcare provider. Always provide evidence-based information and cite sources when discussing medical facts.`
+Remember: Your primary goal is to empower and educate the patient while ensuring their safety. When in doubt, recommend consulting with Uzm.Dr. Abdullah Durgun or their healthcare provider. Always provide evidence-based information and cite sources when discussing medical facts.`
 }
 
 export async function getChatCompletion(

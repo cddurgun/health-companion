@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     const validatedData = appointmentSchema.parse(body)
 
     const appointmentDate = new Date(validatedData.date)
-    const doctorName = validatedData.doctorName || 'Dr. Internist'
+    const doctorName = validatedData.doctorName || 'Uzm.Dr. Abdullah Durgun'
 
     // Generate Zoom meeting link
     const zoomMeeting = generateZoomLink(appointmentDate, validatedData.time)

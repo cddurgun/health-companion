@@ -165,7 +165,7 @@ export default function PainPage() {
                 <h4 className="font-semibold text-gray-900 mb-1">Severe Pain Detected</h4>
                 <p className="text-sm text-gray-700">
                   You have {severePainLogs.length} severe pain {severePainLogs.length === 1 ? 'entry' : 'entries'} (7+ intensity).
-                  If pain persists or worsens, please consult Dr. Internist or seek medical attention.
+                  If pain persists or worsens, please consult Uzm.Dr. Abdullah Durgun or seek medical attention.
                 </p>
               </div>
             </div>

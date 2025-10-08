@@ -14,7 +14,7 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
-    doctorName: 'Dr. Internist',
+    doctorName: 'Uzm.Dr. Abdullah Durgun',
     date: '',
     time: '',
     reason: '',
@@ -51,7 +51,7 @@ export default function AppointmentsPage() {
 
       if (res.ok) {
         setFormData({
-          doctorName: 'Dr. Internist',
+          doctorName: 'Uzm.Dr. Abdullah Durgun',
           date: '',
           time: '',
           reason: '',
@@ -140,7 +140,7 @@ export default function AppointmentsPage() {
             Appointments
           </h1>
           <p className="text-gray-600">
-            Book and manage your appointments with Dr. Internist
+            Book and manage your appointments with Uzm.Dr. Abdullah Durgun
           </p>
         </div>
         <Button onClick={() => setShowForm(!showForm)}>
@@ -164,8 +164,8 @@ export default function AppointmentsPage() {
                 <User className="h-8 w-8 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Dr. Internist</h3>
-                <p className="text-sm text-gray-600">Board Certified Internist</p>
+                <h3 className="font-semibold text-lg">Uzm.Dr. Abdullah Durgun</h3>
+                <p className="text-sm text-gray-600">Internal Medicine Specialist</p>
               </div>
             </div>
             <div className="text-sm text-gray-600 space-y-2">
@@ -190,7 +190,7 @@ export default function AppointmentsPage() {
           <CardHeader>
             <CardTitle>Book New Appointment</CardTitle>
             <CardDescription>
-              Schedule your consultation with Dr. Internist
+              Schedule your consultation with Uzm.Dr. Abdullah Durgun
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -282,7 +282,7 @@ export default function AppointmentsPage() {
           <CalendarIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No appointments scheduled</h3>
           <p className="text-gray-600 mb-4">
-            Book your first appointment with Dr. Internist
+            Book your first appointment with Uzm.Dr. Abdullah Durgun
           </p>
           <Button onClick={() => setShowForm(true)}>
             <Plus className="h-5 w-5 mr-2" />

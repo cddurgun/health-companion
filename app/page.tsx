@@ -121,7 +121,7 @@ export default function LandingPage() {
           <FeatureCard
             icon={<Users className="h-6 w-6" />}
             title="Doctor Appointments"
-            description="Book and manage appointments with our team of experienced internists. Get human care when you need it."
+            description="Book and manage appointments with Uzm.Dr. Abdullah Durgun, Internal Medicine Specialist. Get expert medical care when you need it."
             color="orange"
           />
 
