@@ -3,7 +3,7 @@
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Heart, LayoutDashboard, MessageSquare, Activity, Pill, Calendar, User, LogOut, Menu, X } from 'lucide-react'
+import { Heart, LayoutDashboard, MessageSquare, Activity, Pill, Calendar, User, LogOut, Menu, X, TrendingUp, Utensils, Brain, Dumbbell, Moon, Award, FlaskConical, MapPin, AlertCircle, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -18,14 +18,37 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'AI Chat', href: '/dashboard/chat', icon: MessageSquare },
-    { name: 'Health Tips', href: '/dashboard/health-tips', icon: Heart },
-    { name: 'Symptoms', href: '/dashboard/symptoms', icon: Activity },
-    { name: 'Medications', href: '/dashboard/medications', icon: Pill },
-    { name: 'Appointments', href: '/dashboard/appointments', icon: Calendar },
-    { name: 'Profile', href: '/dashboard/profile', icon: User },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, section: 'main' },
+    { name: 'Health Score', href: '/dashboard/health-score', icon: Award, section: 'main' },
+    { name: 'AI Chat', href: '/dashboard/chat', icon: MessageSquare, section: 'main' },
+
+    // Tracking Section
+    { name: 'Vital Signs', href: '/dashboard/vitals', icon: TrendingUp, section: 'tracking' },
+    { name: 'Symptoms', href: '/dashboard/symptoms', icon: Activity, section: 'tracking' },
+    { name: 'Pain Log', href: '/dashboard/pain', icon: MapPin, section: 'tracking' },
+    { name: 'Medications', href: '/dashboard/medications', icon: Pill, section: 'tracking' },
+    { name: 'Lab Results', href: '/dashboard/labs', icon: FlaskConical, section: 'tracking' },
+
+    // Lifestyle Section
+    { name: 'Nutrition', href: '/dashboard/nutrition', icon: Utensils, section: 'lifestyle' },
+    { name: 'Exercise', href: '/dashboard/exercise', icon: Dumbbell, section: 'lifestyle' },
+    { name: 'Sleep', href: '/dashboard/sleep', icon: Moon, section: 'lifestyle' },
+    { name: 'Mental Health', href: '/dashboard/mood', icon: Brain, section: 'lifestyle' },
+
+    // Care Section
+    { name: 'Appointments', href: '/dashboard/appointments', icon: Calendar, section: 'care' },
+    { name: 'Health Tips', href: '/dashboard/health-tips', icon: Heart, section: 'care' },
+    { name: 'Emergency ID', href: '/dashboard/emergency', icon: AlertCircle, section: 'care' },
+    { name: 'AI Insights', href: '/dashboard/insights', icon: Sparkles, section: 'care' },
+    { name: 'Profile', href: '/dashboard/profile', icon: User, section: 'care' },
   ]
+
+  const groupedNav = {
+    main: navigation.filter(item => item.section === 'main'),
+    tracking: navigation.filter(item => item.section === 'tracking'),
+    lifestyle: navigation.filter(item => item.section === 'lifestyle'),
+    care: navigation.filter(item => item.section === 'care'),
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -65,26 +88,113 @@ export default function DashboardLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {item.name}
-                </Link>
-              )
-            })}
+          <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
+            {/* Main Section */}
+            <div className="space-y-1">
+              {groupedNav.main.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                      isActive
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Tracking Section */}
+            <div>
+              <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                Health Tracking
+              </h3>
+              <div className="space-y-1">
+                {groupedNav.tracking.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                        isActive
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Lifestyle Section */}
+            <div>
+              <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                Lifestyle
+              </h3>
+              <div className="space-y-1">
+                {groupedNav.lifestyle.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                        isActive
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Care Section */}
+            <div>
+              <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                Care & Support
+              </h3>
+              <div className="space-y-1">
+                {groupedNav.care.map((item) => {
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                        isActive
+                          ? 'bg-blue-50 text-blue-600'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
           </nav>
 
           {/* User section */}

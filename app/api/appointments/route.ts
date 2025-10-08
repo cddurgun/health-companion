@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { generateZoomLink, sendAppointmentEmail } from '@/lib/email'
 
 const appointmentSchema = z.object({
   doctorName: z.string().optional(),
@@ -62,16 +63,43 @@ export async function POST(req: Request) {
     const body = await req.json()
     const validatedData = appointmentSchema.parse(body)
 
+    const appointmentDate = new Date(validatedData.date)
+    const doctorName = validatedData.doctorName || 'Dr. Internist'
+
+    // Generate Zoom meeting link
+    const zoomMeeting = generateZoomLink(appointmentDate, validatedData.time)
+
+    // Store Zoom info in notes field (or add dedicated fields to schema)
+    const zoomInfo = `\nZoom Meeting ID: ${zoomMeeting.meetingId}\nPassword: ${zoomMeeting.password}\nJoin URL: ${zoomMeeting.joinUrl}`
+    const notesWithZoom = validatedData.notes ? `${validatedData.notes}${zoomInfo}` : zoomInfo
+
     const appointment = await prisma.appointment.create({
       data: {
         userId: user.id,
-        doctorName: validatedData.doctorName || 'Dr. Internist',
-        date: new Date(validatedData.date),
+        doctorName,
+        date: appointmentDate,
         time: validatedData.time,
         reason: validatedData.reason,
-        notes: validatedData.notes,
+        notes: notesWithZoom,
       },
     })
+
+    // Send appointment confirmation email with Zoom link
+    try {
+      const emailResult = await sendAppointmentEmail({
+        patientName: user.name || 'Patient',
+        patientEmail: session.user.email,
+        doctorName,
+        appointmentDate,
+        appointmentTime: validatedData.time,
+        reason: validatedData.reason,
+        zoomMeeting,
+      })
+      console.log('Email sent successfully:', emailResult)
+    } catch (emailError) {
+      console.error('Failed to send appointment email:', emailError)
+      // Don't fail the appointment creation if email fails
+    }
 
     return NextResponse.json({ appointment }, { status: 201 })
   } catch (error: any) {

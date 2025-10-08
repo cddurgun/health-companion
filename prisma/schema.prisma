@@ -16,6 +16,9 @@ model User {
   name          String?
   age           Int?
   sex           String?
+  bloodType     String?
+  height        Float?    // in cm
+  weight        Float?    // in kg
 
   // Medical Profile
   conditions    String?   // JSON string array
@@ -23,10 +26,20 @@ model User {
   healthGoals   String?   // JSON string array
 
   // Relationships
-  conversations Conversation[]
-  symptoms      Symptom[]
-  appointments  Appointment[]
-  medications   Medication[]
+  conversations     Conversation[]
+  symptoms          Symptom[]
+  appointments      Appointment[]
+  medications       Medication[]
+  vitalSigns        VitalSign[]
+  labResults        LabResult[]
+  foodLogs          FoodLog[]
+  painLogs          PainLog[]
+  moodEntries       MoodEntry[]
+  exerciseLogs      ExerciseLog[]
+  sleepLogs         SleepLog[]
+  healthScores      HealthScore[]
+  emergencyContacts EmergencyContact[]
+  achievements      Achievement[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -103,4 +116,149 @@ model Appointment {
   notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model VitalSign {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            String   // "blood_pressure", "heart_rate", "spo2", "temperature", "glucose", "weight"
+  systolic        Int?     // for blood pressure
+  diastolic       Int?     // for blood pressure
+  value           Float?   // for single-value measurements
+  unit            String   // "mmHg", "bpm", "%", "°F", "mg/dL", "kg"
+  notes           String?
+  measuredAt      DateTime
+  createdAt       DateTime @default(now())
+}
+
+model LabResult {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testName    String   // "CBC", "Lipid Panel", "Vitamin D", etc.
+  testDate    DateTime
+  result      String   // JSON string with all values
+  fileUrl     String?  // uploaded PDF/image
+  provider    String?  // lab name
+  notes       String?
+  flagged     Boolean  @default(false) // abnormal results
+  createdAt   DateTime @default(now())
+}
+
+model FoodLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealType    String   // "breakfast", "lunch", "dinner", "snack"
+  foodName    String
+  calories    Float?
+  protein     Float?   // grams
+  carbs       Float?   // grams
+  fat         Float?   // grams
+  notes       String?
+  photoUrl    String?
+  consumedAt  DateTime
+  createdAt   DateTime @default(now())
+}
+
+model PainLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bodyPart    String   // "head", "back", "chest", "abdomen", etc.
+  intensity   Int      // 1-10 scale
+  quality     String?  // "sharp", "dull", "throbbing", "burning"
+  triggers    String?  // JSON array
+  relievedBy  String?
+  notes       String?
+  loggedAt    DateTime
+  createdAt   DateTime @default(now())
+}
+
+model MoodEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mood        String   // "great", "good", "okay", "bad", "terrible"
+  energy      Int      // 1-10
+  stress      Int      // 1-10
+  anxiety     Int?     // 1-10
+  sleep       Int?     // hours
+  notes       String?
+  triggers    String?  // JSON array
+  loggedAt    DateTime
+  createdAt   DateTime @default(now())
+}
+
+model ExerciseLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseType String  // "cardio", "strength", "flexibility", "sports"
+  activity    String   // "running", "cycling", "weightlifting", etc.
+  duration    Int      // minutes
+  intensity   String   // "light", "moderate", "vigorous"
+  calories    Float?
+  distance    Float?   // km or miles
+  notes       String?
+  performedAt DateTime
+  createdAt   DateTime @default(now())
+}
+
+model SleepLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bedTime     DateTime
+  wakeTime    DateTime
+  totalHours  Float
+  quality     Int      // 1-10
+  deepSleep   Float?   // hours
+  remSleep    Float?   // hours
+  awakenings  Int?     // number of times
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model HealthScore {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  overallScore    Int      // 0-100
+  physicalHealth  Int      // 0-100
+  mentalHealth    Int      // 0-100
+  nutrition       Int      // 0-100
+  exercise        Int      // 0-100
+  sleep           Int      // 0-100
+  stress          Int      // 0-100
+  preventiveCare  Int      // 0-100
+  socialHealth    Int      // 0-100
+  calculatedAt    DateTime
+  createdAt       DateTime @default(now())
+}
+
+model EmergencyContact {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  relationship String  // "spouse", "parent", "sibling", "friend", "doctor"
+  phone       String
+  email       String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // "streak", "milestone", "goal"
+  name        String   // "7-Day Exercise Streak", "100 Meals Logged"
+  description String
+  icon        String   // emoji or icon name
+  earnedAt    DateTime
+  createdAt   DateTime @default(now())
 }
