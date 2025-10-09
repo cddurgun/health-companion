@@ -22,10 +22,10 @@ export default function Error({
           <div className="mb-6">
             <div className="text-6xl mb-4">⚠️</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Something went wrong!
+              Bir sorun oluştu!
             </h2>
             <p className="text-gray-600">
-              We encountered an unexpected error. Please try again.
+              Beklenmeyen bir hata ile karşılaştık. Lütfen tekrar deneyin.
             </p>
           </div>
 
@@ -42,14 +42,14 @@ export default function Error({
               onClick={reset}
               className="w-full"
             >
-              Try again
+              Tekrar dene
             </Button>
             <Button
               onClick={() => window.location.href = '/'}
               variant="outline"
               className="w-full"
             >
-              Go to homepage
+              Ana sayfaya dön
             </Button>
           </div>
         </div>

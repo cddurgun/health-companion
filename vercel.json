@@ -1,8 +1,5 @@
 {
   "buildCommand": "prisma generate && prisma db push --accept-data-loss && next build",
   "framework": "nextjs",
-  "installCommand": "npm install",
-  "env": {
-    "NEXTAUTH_URL": "https://muayene.vercel.app"
-  }
+  "installCommand": "npm install"
 }

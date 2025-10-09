@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  // Internationalization - Disable automatic locale detection
+  i18n: {
+    locales: ['tr'],
+    defaultLocale: 'tr',
+    localeDetection: false,
+  },
+
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
