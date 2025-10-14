@@ -198,6 +198,15 @@ export default function LandingPage() {
             <Heart className="h-6 w-6 text-blue-600" />
             <span className="font-semibold text-gray-900">HealthCompanion</span>
           </div>
+          <div className="flex items-center justify-center gap-6 mb-4">
+            <Link href="/privacy" className="text-sm text-blue-600 hover:underline">
+              Privacy Policy
+            </Link>
+            <span className="text-gray-400">•</span>
+            <Link href="/support" className="text-sm text-blue-600 hover:underline">
+              Support
+            </Link>
+          </div>
           <p className="text-sm">
             © 2025 HealthCompanion. Empowering your health journey with AI and human care.
           </p>
